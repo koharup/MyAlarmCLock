@@ -8,13 +8,33 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TimeAlertDialog.Listener {
+    override fun getUp() {
+        finish()
+    }
+
+    override fun snooze() {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = System.currentTimeMillis()
+        calendar.add(Calendar.MINUTE,5)
+        setAlarmManager(calendar)
+        finish()
+
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (intent?.getBooleanExtra("onReceive",false) == true){
+            val dialog = TimeAlertDialog()
+            dialog.show(supportFragmentManager,"alert_dialog")
+        }
+
         setContentView(R.layout.activity_main)
 
         setAlarm.setOnClickListener(){
@@ -24,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             setAlarmManager(calendar)
         }
         cancelAlarm.setOnClickListener(){
+            Toast.makeText(this,"キャンセルしました",Toast.LENGTH_SHORT).show()
             cancelAlarmManager()
         }
     }

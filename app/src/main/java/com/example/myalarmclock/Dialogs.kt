@@ -1,6 +1,9 @@
 package com.example.myalarmclock
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 
 
@@ -18,6 +21,18 @@ class TimeAlertDialog : DialogFragment(){
         when(context){
             is Listener -> listener = context
         }
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val builder = AlertDialog.Builder(requireActivity())
+        builder.setMessage("時間になりました!")
+        builder.setPositiveButton("起きる"){ dialog, which ->
+            listener?.getUp()
+        }
+        builder.setNegativeButton("あと5分"){dialog, which ->
+            listener?.snooze()
+        }
+        return builder.create()
     }
 }
 
